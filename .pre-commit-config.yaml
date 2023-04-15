@@ -1,0 +1,39 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: trailing-whitespace
+      - id: check-added-large-files
+      - id: check-case-conflict
+
+  - repo: local
+    hooks:
+      - id: black_formatting
+        language: system
+        name: Format code in src using black
+        entry: black src/ --diff --color
+        pass_filenames: false
+
+      - id: import_organisation
+        language: system
+        name: organise imports in .py files
+        entry: isort . --float-to-top
+        pass_filenames: false
+
+      - id: notebook_formatting
+        language: system
+        name: format notebooks
+        entry: nbqa black . --diff --color
+        pass_filenames: false
+
+      - id: notebook_import_organising
+        language: system
+        name: organising imports in  notebooks
+        entry: nbqa isort . --float-to-top
+        pass_filenames: false
+
+      - id: notebook_type_check
+        language: system
+        name: check types in notebooks
+        entry: nbqa mypy .
+        pass_filenames: false

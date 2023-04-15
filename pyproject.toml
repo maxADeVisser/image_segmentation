@@ -1,0 +1,44 @@
+[tool.poetry]
+name = "image-segmentation"
+version = "0.1.0"
+description = "image segmenation with deep encoder-decoder networks"
+authors = ["Max Andreas de Visser", "Casper Anton Poulsen", "Bence Zoltan Balazs"]
+readme = "README.md"
+packages = [{include = "image_segmentation"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+numpy = {extras = ["stubs"], version = "^1.24.2"}
+pandas = "^2.0.0"
+matplotlib = "^3.7.1"
+ipykernel = "^6.22.0"
+torch = "^2.0.0"
+torchvision = "^0.15.1"
+pandas-stubs = "^2.0.0.230412"
+
+[tool.poetry.group.dev.dependencies]
+black = {extras = ["jupyter"], version = "^23.3.0"}
+pre-commit = "^3.2.2"
+nbqa = "^1.7.0"
+flake8 = "^6.0.0"
+mypy = "^1.2.0"
+isort = "^5.12.0"
+
+
+[tool.isort]
+profile = 'black'
+multi_line_output = 3
+include_trailing_comma = true
+use_parentheses = true
+line_length = 120
+ensure_newline_before_comments = true
+
+[tool.black]
+line-length = 120
+exclude = [".venv",".git","__pycache__",".pytest_cache",".mypy_cache"]
+include = '\bsrc\b.*\.(py|ipynb)$'
+ignore = ["E731", "E203", "E266", "E501", "W503", "W605"]
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
