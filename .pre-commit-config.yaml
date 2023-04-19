@@ -8,32 +8,32 @@ repos:
 
   - repo: local
     hooks:
-      - id: black_formatting
+      - id: py_black
         language: system
         name: Format code in src using black
-        entry: black src/ --diff --color
+        entry: black --include '\.py$' src --diff --color --config pyproject.toml
         pass_filenames: false
 
-      - id: import_organisation
+      - id: py_isort
         language: system
         name: organise imports in .py files
-        entry: isort . --float-to-top
+        entry: isort src --float-to-top
         pass_filenames: false
 
-      - id: notebook_formatting
+      - id: py_mypy
+        language: system
+        name: type check .py files
+        entry: mypy src
+        pass_filenames: false
+
+      - id: ipynb_black
         language: system
         name: format notebooks
-        entry: nbqa black . --diff --color
+        entry: black --include '\.ipynb$' src --diff --color --ipynb --config pyproject.toml
         pass_filenames: false
 
-      - id: notebook_import_organising
+      - id: ipynb_isort
         language: system
-        name: organising imports in  notebooks
-        entry: nbqa isort . --float-to-top
-        pass_filenames: false
-
-      - id: notebook_type_check
-        language: system
-        name: check types in notebooks
-        entry: nbqa mypy .
+        name: organising imports in notebooks
+        entry: nbqa isort src --float-to-top
         pass_filenames: false
