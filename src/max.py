@@ -29,7 +29,5 @@ def locate_data(
 
 
 def load_data(file_paths: list[Path]) -> np.ndarray:
-    """Load images into memory with uint8 dtype (format PyTorch likes)"""
-    return np.array(
-        [np.array(Image.open(x), dtype=np.uint8) for x in file_paths]
-    )
+    """Load images into memory with uint8 dtype (format PyTorch likes"""
+    return np.array([np.array(Image.open(x), dtype=np.uint8) for x in file_paths])

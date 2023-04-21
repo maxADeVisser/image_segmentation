@@ -3,6 +3,7 @@
 - requires at least python 3.10
 
 ## Setup Environment
+install poetry with `curl -sSL https://install.python-poetry.org | python3 -`
 1. Run `poetry install`
 2. if the environment is not automatically activating, run `poetry shell`
 
