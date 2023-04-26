@@ -5,4 +5,5 @@
     },
     "python.linting.enabled": true,
     "python.linting.mypyEnabled": true,
+    "jupyter.notebookFileRoot": "${workspaceFolder}",
 }
