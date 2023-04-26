@@ -24,8 +24,10 @@ def augment_images_plain(X_tensor,y_tensor,augmenter, no_augmentations = 2):
     samples = np.random.randint(X_tensor.shape[0], size = no_augmentations)
     X_changes = augmenter(X_tensor[samples].permute(0,3,1,2))
     X_changes = X_changes.permute(0,2,3,1)
+    y_changes = y_tensor[samples]
+
     
-    return X_changes , y_tensor[samples]
+    return X_changes , y_changes 
 
 def augment_five_crop(X_tensor,y_tensor,crop_size = (360, 480), no_augmentations = 2):
     
