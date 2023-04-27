@@ -89,9 +89,26 @@ def verify_dimensions(
     return all([x.shape[:-1] == (height, width) for x in data])
 
 
-def search_for_classes(classes: list[RGB]) -> list:
-    """Searches for classes in the provided data and returns the indices of the images that contain them"""
-    imageIdxs_containing_classes: list = []
+def search_for_classes(classes: list[RGB], data: np.ndarray) -> dict[str, list[int]]:
+    """Searches for classes in the provided data and returns,
+    the indices of the images that contain them."""
+    # IMPROVE THIS FUNCTION
+    assert (
+        data.ndim == 4
+    ), "Data must be 4-dimensional: (n_images, image_height, image_width, color_channels)"
+
+    # imageIdxs_containing_classes: list[int] = []
+    imageIdxs_containing_classes: dict[str, list[int]] = {}
+
+    for i in tqdm(range(len(data))):  # for each image
+        for c in classes:  # check if the classes in is the image
+            contains_class = (
+                np.sum(np.all(data[i] == c, axis=2)) > 0
+            )  # does the image contain the class?
+
+            if contains_class:
+                imageIdxs_containing_classes[c.get_label()].append(i)
+
     return imageIdxs_containing_classes
 
 

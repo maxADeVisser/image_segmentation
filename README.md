@@ -13,3 +13,6 @@ install poetry with `curl -sSL https://install.python-poetry.org | python3 -`
 
 ## Handy dandy tools
 - When working with images, this extension is nice when debugging to visually inspect images: https://marketplace.visualstudio.com/items?itemName=076923.python-image-preview
+
+## Files
+- `out/y_train_class_count.csv` has information of the count of pixels for each class
