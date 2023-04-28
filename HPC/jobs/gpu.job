@@ -1,0 +1,20 @@
+#!/bin/bash
+
+#SBATCH --job-name=simple        # Job name
+#SBATCH --output=logs/%j.out     # Name of output file (%j expands to "jobId")
+#SBATCH --cpus-per-task=1        # Schedule one core
+#SBATCH --time=01:00:00          # Run time limit (hh:mm:ss) - run for one hour max. If not provided, will default to 1 hour
+#SBATCH --gres=gpu               # Schedule a GPU, or more with gpu:2 etc
+#SBATCH --partition=brown        # which queue to run in (red or blue). Red -> high power, brown -> less high power.
+#SBATCH --mail-type=FAIL,END     # Send a notification email when the job is done or fails
+
+
+# load modules with specified versions
+module load Python/3.7.4-GCCcore-8.3.0 
+module load CUDA/10.2.89-GCC-8.3.0 
+
+# activate venv
+source venv/bin/activate
+
+# Print out the hostname of the node the job is running on
+python main.py --train --epochs=2 --latent_dim=50
