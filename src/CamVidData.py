@@ -1,13 +1,16 @@
+from pathlib import Path
 from typing import Tuple
+
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import torch
 import torch.utils.data as data
 import torchvision.transforms as T
-from pathlib import Path
-import numpy as np
 from PIL import Image
-import torch
-import pandas as pd
-import matplotlib.pyplot as plt
+
 from max import locate_data
+
 
 class SemanticSegmentationDataset(data.Dataset):
     def __init__(self, data_path: str, image_size: Tuple[int, int] = (720, 960)) -> None:
@@ -38,9 +41,9 @@ class SemanticSegmentationDataset(data.Dataset):
 
 
     def __getitem__(self, index: int) -> Tuple[np.ndarray, np.ndarray]:
-        
+
         org_idx = self.original_index(index)
-        
+
         X = self.X_train[org_idx]
         y = self.y_train[org_idx]
 
@@ -60,8 +63,8 @@ class SemanticSegmentationDataset(data.Dataset):
 
         X = self.resize_transform(X)
         y = self.resize_transform(y)
-        
-        
+
+
         y = np.array(y.permute(1,2,0))
         y = self.adjust_mask(y, self.class_labels)
         y = torch.tensor(y)
@@ -80,11 +83,11 @@ class SemanticSegmentationDataset(data.Dataset):
     def load_class_labels(self) -> pd.DataFrame:
         """Load class labels"""
         return pd.read_csv(self.data_path / "class_dict.csv")
-    
+
     def original_index(self,index: int) -> int:
         """Get original index of augmented image"""
         return index % self.X_train.shape[0]
-    
+
     def adjust_mask(self,mask: np.array, class_labels: pd.DataFrame) -> torch.Tensor:
         """Adjust mask to be in range 0-11"""
         label_dict = class_labels.iloc[:, 1:].to_dict(orient='index')
@@ -95,10 +98,10 @@ class SemanticSegmentationDataset(data.Dataset):
             segmentation_map=(segmentation_map*1)
             segmentation_map*=x
             segmentation_map_list.append(segmentation_map)
-            
-            
+
+
         return np.amax(np.stack(segmentation_map_list,axis=-1),axis=-1)
-    
+
 
 def mask_to_rgb(mask: np.array, class_labels: pd.DataFrame) -> np.array:
     """Transforms mask to RGB image using class_labels"""
@@ -114,7 +117,7 @@ def mask_to_rgb(mask: np.array, class_labels: pd.DataFrame) -> np.array:
     return rgb_image
 
 def compare_images(images,image_titles = ""):
-    
+
     if image_titles == "":
         image_titles = tuple([f'Image {i}' for i in range(len(images))])
 

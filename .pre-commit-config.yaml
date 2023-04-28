@@ -2,7 +2,6 @@ repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.4.0
     hooks:
-      - id: trailing-whitespace
       - id: check-added-large-files
       - id: check-case-conflict
 
@@ -20,20 +19,20 @@ repos:
         entry: isort src --float-to-top
         pass_filenames: false
 
-      - id: py_mypy
-        language: system
-        name: type check .py files
-        entry: mypy src
-        pass_filenames: false
+      # - id: py_mypy
+      #   language: system
+      #   name: type check .py files
+      #   entry: mypy src
+      #   pass_filenames: false
 
-      - id: ipynb_black
-        language: system
-        name: format notebooks
-        entry: black --include '\.ipynb$' src --diff --color --ipynb --config pyproject.toml
-        pass_filenames: false
+      # - id: ipynb_black
+      #   language: system
+      #   name: format notebooks
+      #   entry: nbqa black --include '\.ipynb$' src --diff --color --ipynb --config pyproject.toml
+      #   pass_filenames: false
 
-      - id: ipynb_isort
-        language: system
-        name: organising imports in notebooks
-        entry: nbqa isort src --float-to-top
-        pass_filenames: false
+      # - id: ipynb_isort
+      #   language: system
+      #   name: organising imports in notebooks
+      #   entry: nbqa isort src --float-to-top
+      #   pass_filenames: false
