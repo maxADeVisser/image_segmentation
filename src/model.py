@@ -21,6 +21,7 @@ def createDeepLabv3(outputchannels: int=CLASS_COUNT):
     """
     model = models.segmentation.deeplabv3_resnet101(pretrained=True,
                                                     progress=True)
+
     model.classifier = DeepLabHead(2048, outputchannels)
     # Set the model in training mode
     model.train()
@@ -37,9 +38,9 @@ def train_model(model, criterion, dataloaders, optimizer, metrics, bpath,
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     model.to(device)
     # Initialize the log file for training and testing loss and metrics
-    fieldnames = ['epoch', 'Train_loss', 'Val_loss'] + \
-        [f'Train_{m}' for m in metrics.keys()] + \
-        [f'Val_{m}' for m in metrics.keys()]
+    fieldnames = ['epoch', 'train_loss', 'val_loss'] + \
+        [f'train_{m}' for m in metrics.keys()] + \
+        [f'val_{m}' for m in metrics.keys()]
     with open(os.path.join(bpath, 'log.csv'), 'w', newline='') as csvfile:
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         writer.writeheader()

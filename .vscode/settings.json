@@ -1,9 +1,12 @@
 {
+    "jupyter.notebookFileRoot": "${workspaceFolder}",
     "[python]": {
         "editor.defaultFormatter": "ms-python.black-formatter",
         "editor.formatOnType": true
     },
+    "terminal.integrated.env.linux": {
+        "PYTHONPATH": "${workspaceFolder}"
+    },
     "python.linting.enabled": true,
     "python.linting.mypyEnabled": true,
-    "jupyter.notebookFileRoot": "${workspaceFolder}",
 }

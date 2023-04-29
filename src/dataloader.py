@@ -5,10 +5,11 @@ from torchvision import transforms
 
 from CamVidData import SemanticSegmentationDataset
 
+from segmentationData import SegmentationDataset
 
-
-def get_dataloader(data_dir: str,
-                   augmentations: str = "neither",
+def get_dataloader(data_dir: str= "data/CamVid",
+                   image_folder: str = "",
+                   mask_folder: str = "_labels",
                    batch_size: int = 4) -> dict:
     """ 
     Args:
@@ -20,10 +21,13 @@ def get_dataloader(data_dir: str,
         dataloaders: Returns dataloaders dictionary containing the
         Train and Test dataloaders.
     """
+    data_transforms = transforms.Compose([transforms.ToTensor()])
+
     image_datasets = {
-        x: SemanticSegmentationDataset(data_dir, 
-                                       data_split=x,
-                                       augment=augmentations)
+        x: SegmentationDataset(root=Path(data_dir),
+                               transforms=data_transforms,
+                               image_folder=x+image_folder,
+                               mask_folder=x+mask_folder)
         for x in ['train', 'val']
     }
     dataloaders = {

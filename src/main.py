@@ -4,7 +4,14 @@ from torch.utils import data
 
 from dataloader import get_dataloader
 
+
+import sys
+ 
+# setting path
+
 from evaluation import mIoU
+
+
 from model import createDeepLabv3, train_model
 
 def main(data_dir: str = "data/CamVid/", 
@@ -28,8 +35,9 @@ def main(data_dir: str = "data/CamVid/",
 
     dataloaders = get_dataloader(data_dir=data_dir,
                                  batch_size=batch_size)
-    
+
     _ = train_model(model=model,
+                    optimizer=optimizer,
                     criterion=criterion,
                     dataloaders=dataloaders,
                     bpath =out_dir,
