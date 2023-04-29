@@ -5,19 +5,19 @@ repos:
       - id: check-added-large-files
       - id: check-case-conflict
 
-  - repo: local
-    hooks:
-      - id: py_black
-        language: system
-        name: Format code in src using black
-        entry: black --include '\.py$' src --diff --color --config pyproject.toml
-        pass_filenames: false
+  # - repo: local
+  #   hooks:
+  #     - id: py_black
+  #       language: system
+  #       name: Format code in src using black
+  #       entry: black --include '\.py$' src --diff --color --config pyproject.toml
+  #       pass_filenames: false
 
-      - id: py_isort
-        language: system
-        name: organise imports in .py files
-        entry: isort src --float-to-top
-        pass_filenames: false
+  #     - id: py_isort
+  #       language: system
+  #       name: organise imports in .py files
+  #       entry: isort src --float-to-top
+  #       pass_filenames: false
 
       # - id: py_mypy
       #   language: system
