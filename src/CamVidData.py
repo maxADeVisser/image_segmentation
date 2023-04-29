@@ -9,7 +9,7 @@ import torch.utils.data as data
 import torchvision.transforms as T
 from PIL import Image
 
-from max import locate_data
+from utils import locate_data
 
 
 class SemanticSegmentationDataset(data.Dataset):
