@@ -1,29 +1,25 @@
 import numpy as np
-import torch
 from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score
+from torchmetrics.classification import MulticlassJaccardIndex
+
+from _types import CLASS_COUNT
 
 SMOOTH = 1e-6  # To avoid division by zero
 
 
-def iou(model_output: torch.Tensor, label: torch.Tensor) -> float:
-    """Calculate the IoU for a single model output and label pair."""
-    # FIXME: function does not work correctly i think. Needs to be validated.
-    intersection = (
-        (model_output & label).float().sum((1, 2))
-    )  # Will be zero if Truth=0 or Prediction=0
-    union = (model_output | label).float().sum((1, 2))  # Will be zero if both are 0
-
-    iou = (intersection + SMOOTH) / (union + SMOOTH)  # smooth division to avoid 0/0
-
-    thresholded = (
-        torch.clamp(20 * (iou - 0.7), 0, 10).ceil() / 10
-    )  # This is equal to comparing with thresolds
-
-    return thresholded  # Or thresholded.mean() if you are interested in average across the batch
-
+def mIoU(y_pred: np.ndarray, y_true: np.ndarray) -> float:
+    """See: https://torchmetrics.readthedocs.io/en/stable/classification/jaccard_index.html
+    """
+    jaccard = MulticlassJaccardIndex(num_classes=CLASS_COUNT)
+    total_iou = 0
+    
+    for i in range(len(y_pred)):
+        total_iou += jaccard(y_pred[i], y_true[i])
+    
+    return total_iou / len(y_pred)
 
 def evaluate_pixel_basis(
-    y_pred: np.array, y_true: np.array
+    y_pred: np.ndarray, y_true: np.ndarray
 ) -> tuple[float, float, float, float]:
     """Evaluate the model on pixel basis.
     Returns accuracy, f1, precision, recall in that order"""

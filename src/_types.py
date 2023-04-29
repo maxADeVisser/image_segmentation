@@ -54,3 +54,5 @@ CLASS_COLOR_LABELS = {
     "Void": RGB(0, 0, 0),
     "Wall": RGB(64, 192, 0),
 }
+
+CLASS_COUNT = len(CLASS_COLOR_LABELS)
