@@ -7,10 +7,9 @@ from CamVidData import SemanticSegmentationDataset
 
 
 
-def get_dataloader_sep_folder(data_dir: str,
-                              image_folder: str = 'Image',
-                              mask_folder: str = 'Mask',
-                              batch_size: int = 4) -> dict:
+def get_dataloader(data_dir: str,
+                   augmentations: str = "neither",
+                   batch_size: int = 4) -> dict:
     """ 
     Args:
         data_dir (str): The data directory or root.
@@ -21,18 +20,18 @@ def get_dataloader_sep_folder(data_dir: str,
         dataloaders: Returns dataloaders dictionary containing the
         Train and Test dataloaders.
     """
-    data_transforms = transforms.Compose([transforms.ToTensor()])
-
     image_datasets = {
-        x: SemanticSegmentationDataset(data_dir)
-        for x in ['train', 'test']
+        x: SemanticSegmentationDataset(data_dir, 
+                                       data_split=x,
+                                       augment=augmentations)
+        for x in ['train', 'val']
     }
     dataloaders = {
         x: DataLoader(image_datasets[x],
                       batch_size=batch_size,
                       shuffle=True,
                       num_workers=8)
-        for x in ['train', 'test']
+        for x in ['train', 'val']
     }
 
     return dataloaders

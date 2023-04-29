@@ -9,10 +9,9 @@ from tqdm import tqdm
 
 from torchvision.models.segmentation.deeplabv3 import DeepLabHead
 from torchvision import models
+from _types import CLASS_COUNT
 
-
-
-def createDeepLabv3(outputchannels=32):
+def createDeepLabv3(outputchannels: int=CLASS_COUNT):
     """DeepLabv3 class with custom head
     Args:
         outputchannels (int, optional): The number of output channels
@@ -38,9 +37,9 @@ def train_model(model, criterion, dataloaders, optimizer, metrics, bpath,
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     model.to(device)
     # Initialize the log file for training and testing loss and metrics
-    fieldnames = ['epoch', 'Train_loss', 'Test_loss'] + \
+    fieldnames = ['epoch', 'Train_loss', 'Val_loss'] + \
         [f'Train_{m}' for m in metrics.keys()] + \
-        [f'Test_{m}' for m in metrics.keys()]
+        [f'Val_{m}' for m in metrics.keys()]
     with open(os.path.join(bpath, 'log.csv'), 'w', newline='') as csvfile:
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         writer.writeheader()
@@ -52,8 +51,8 @@ def train_model(model, criterion, dataloaders, optimizer, metrics, bpath,
         # Initialize batch summary
         batchsummary = {a: [0] for a in fieldnames}
 
-        for phase in ['Train', 'Test']:
-            if phase == 'Train':
+        for phase in ['train', 'val']:
+            if phase == 'train':
                 model.train()  # Set model to training mode
             else:
                 model.eval()  # Set model to evaluate mode
@@ -66,7 +65,7 @@ def train_model(model, criterion, dataloaders, optimizer, metrics, bpath,
                 optimizer.zero_grad()
 
                 # track history if only in train
-                with torch.set_grad_enabled(phase == 'Train'):
+                with torch.set_grad_enabled(phase == 'train'):
                     outputs = model(inputs)
                     loss = criterion(outputs['out'], masks)
                     y_pred = outputs['out'].data.cpu().numpy().ravel()
@@ -81,7 +80,7 @@ def train_model(model, criterion, dataloaders, optimizer, metrics, bpath,
                                 metric(y_true.astype('uint8'), y_pred))
 
                     # backward + optimize only if in training phase
-                    if phase == 'Train':
+                    if phase == 'train':
                         loss.backward()
                         optimizer.step()
             batchsummary['epoch'] = epoch
@@ -95,7 +94,7 @@ def train_model(model, criterion, dataloaders, optimizer, metrics, bpath,
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
             writer.writerow(batchsummary)
             # deep copy the model
-            if phase == 'Test' and loss < best_loss:
+            if phase == 'val' and loss < best_loss:
                 best_loss = loss
                 best_model_wts = copy.deepcopy(model.state_dict())
 
