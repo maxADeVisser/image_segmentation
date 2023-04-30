@@ -1,10 +1,10 @@
 from pathlib import Path
 from typing import Any, Callable, Optional
 
-import pandas as pd
 import numpy as np
-from PIL import Image
+import pandas as pd
 import torch
+from PIL import Image
 from torchvision.datasets.vision import VisionDataset
 
 

@@ -17,18 +17,3 @@ def mIoU(y_pred: np.ndarray, y_true: np.ndarray) -> float:
         total_iou += jaccard(y_pred[i], y_true[i])
     
     return total_iou / len(y_pred)
-
-def evaluate_pixel_basis(
-    y_pred: np.ndarray, y_true: np.ndarray
-) -> tuple[float, float, float, float]:
-    """Evaluate the model on pixel basis.
-    Returns accuracy, f1, precision, recall in that order"""
-    acc = accuracy_score(y_true, y_pred)
-    f1 = f1_score(y_true, y_pred)
-    precision = precision_score(y_true, y_pred)
-    recall = recall_score(y_true, y_pred)
-    print(
-        f"Accuracy: {acc:.4f}, F1: {f1:.4f}, Precision: {precision:.4f}, Recall: {recall:.4f}"
-    )
-
-    return acc, f1, precision, recall
