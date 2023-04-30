@@ -30,7 +30,7 @@ def main(data_dir: str = "data/CamVid/",
     metrics = {
         "accuracy_score":accuracy_score,
         "f1_score": f1_score,
-        "mIoU": mIoU
+    #    "mIoU": mIoU
     }
 
     dataloaders = get_dataloader(data_dir=data_dir,

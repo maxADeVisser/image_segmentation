@@ -105,24 +105,21 @@ class SegmentationDataset(VisionDataset):
             elif self.image_color_mode == "grayscale":
                 image = image.convert("L")
             mask = Image.open(mask_file)
-            if self.mask_color_mode == "rgb":
-                mask = mask.convert("RGB")
-            elif self.mask_color_mode == "grayscale":
-                mask = mask.convert("L")
+
+
+
+            mask = np.array(mask, dtype=np.uint8)
+            mask = self.adjust_mask(mask, self.class_labels)
+            mask = torch.tensor(mask)
+            mask = torch.squeeze(mask)
+
+
+
             sample = {"image": image, "mask": mask}
             if self.transforms:
                 sample["image"] = self.transforms(sample["image"])
-                sample["mask"] = self.transforms(sample["mask"])
+#                sample["mask"] = self.transforms(sample["mask"])
 
-                print(sample["mask"].shape)
-                print(sample["mask"])
-
-                sample["mask"] = np.array(sample["mask"].permute(1,2,0))
-                sample["mask"] = self.adjust_mask(sample["mask"], self.class_labels)
-                sample["mask"] = torch.tensor(sample["mask"])
-                sample["mask"] = torch.squeeze(sample["mask"])
-
-                print(sample["mask"])
             return sample
 
     def adjust_mask(self,mask: np.array, class_labels: pd.DataFrame) -> torch.Tensor:
@@ -136,6 +133,8 @@ class SegmentationDataset(VisionDataset):
             segmentation_map*=x
             segmentation_map_list.append(segmentation_map)
 
+        return np.amax(np.stack(segmentation_map_list,axis=-1),axis=-1)
+            
     def load_class_labels(self) -> pd.DataFrame:
         """Load class labels"""
         return pd.read_csv(Path(self.root) / "class_dict.csv")

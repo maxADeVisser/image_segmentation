@@ -68,9 +68,12 @@ def train_model(model, criterion, dataloaders, optimizer, metrics, bpath,
                 # track history if only in train
                 with torch.set_grad_enabled(phase == 'train'):
                     outputs = model(inputs)
+
                     loss = criterion(outputs['out'], masks)
-                    y_pred = outputs['out'].data.cpu().numpy().ravel()
+
+                    y_pred = torch.argmax(outputs['out'], dim=1).data.cpu().numpy().ravel()
                     y_true = masks.data.cpu().numpy().ravel()
+
                     for name, metric in metrics.items():
                         if name == 'f1_score':
                             # Use a classification threshold of 0.1

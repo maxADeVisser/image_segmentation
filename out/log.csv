@@ -1,1 +1,1 @@
-epoch,train_loss,val_loss,train_accuracy_score,train_f1_score,train_mIoU,val_accuracy_score,val_f1_score,val_mIoU
+epoch,train_loss,val_loss,train_accuracy_score,train_f1_score,val_accuracy_score,val_f1_score
