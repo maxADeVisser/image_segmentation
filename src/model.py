@@ -65,6 +65,7 @@ def fit_deeplabv3(
 
     ### TRAINING LOOP ###
     for epoch in range(1, num_epochs + 1):
+        torch.cuda.empty_cache()
         print(f"Epoch {epoch}/{num_epochs}")
         print("-" * 10)
 
@@ -108,10 +109,13 @@ def fit_deeplabv3(
                                 metric(y_true.astype("uint8"), y_pred)
                             )
 
+                    
+
                     # backwards pass:
                     if phase == "train":
                         loss.backward()  # compute gradients
                         optimizer.step()  # update parameters
+
 
             # Calculate epoch summary
             batchsummary["epoch"] = epoch

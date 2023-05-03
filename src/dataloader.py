@@ -10,7 +10,13 @@ def get_dataloaders(
     data_dir: str = "data/CamVid",
     image_folder: str = "",
     mask_folder: str = "_labels",
-    batch_size: int = 4,
+    batch_size: int = 2,
+    data_transforms: transforms.Compose = transforms.Compose(
+        [
+            transforms.ToTensor(),
+            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+        ]
+    )
 ) -> dict[str, DataLoader]:
     """
     Args:
@@ -23,12 +29,12 @@ def get_dataloaders(
         Train and Test dataloaders.
     """
     # Define transforms (convert to tensor and normalize)
-    data_transforms = transforms.Compose(
-        [
-            transforms.ToTensor(),
-            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
-        ]
-    )
+    # data_transforms = transforms.Compose(
+    #     [
+    #         transforms.ToTensor(),
+    #         transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+    #     ]
+    # )
 
     image_datasets = {
         x: SegmentationDataset(
@@ -42,7 +48,7 @@ def get_dataloaders(
     
     dataloaders = {
         x: DataLoader(
-            image_datasets[x], batch_size=batch_size, shuffle=True, num_workers=2
+            image_datasets[x], batch_size=batch_size, shuffle=True, num_workers=2, drop_last=True
         )
         for x in ["train", "val"]
     }

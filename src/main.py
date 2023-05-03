@@ -5,13 +5,14 @@ from torch.utils import data
 from dataloader import get_dataloaders
 from evaluation import mIoU
 from model import createDeepLabv3, fit_deeplabv3
-
+import os
+os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "max_split_size_mb:1000"
 
 def main(
     data_dir: str = "data/CamVid/",
     out_dir: str = "out",
     epochs: int = 25,
-    batch_size: int = 4,
+    batch_size: int = 2,
     learn_rate: float = 0.001,
 ) -> None:
     model = createDeepLabv3()  # instantiate model
@@ -23,7 +24,7 @@ def main(
     metrics = {
         "accuracy_score": accuracy_score,
         "f1_score": f1_score,
-        #    "mIoU": mIoU
+        "mIoU": mIoU
     }
 
     dataloaders = get_dataloaders(data_dir=data_dir, batch_size=batch_size)
