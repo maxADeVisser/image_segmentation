@@ -16,7 +16,7 @@ def get_dataloaders(
             transforms.ToTensor(),
             transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
         ]
-    )
+    ),
 ) -> dict[str, DataLoader]:
     """
     Args:
@@ -45,10 +45,14 @@ def get_dataloaders(
         )
         for x in ["train", "val"]
     }
-    
+
     dataloaders = {
         x: DataLoader(
-            image_datasets[x], batch_size=batch_size, shuffle=True, num_workers=2, drop_last=True
+            image_datasets[x],
+            batch_size=batch_size,
+            shuffle=True,
+            num_workers=2,
+            drop_last=True,
         )
         for x in ["train", "val"]
     }

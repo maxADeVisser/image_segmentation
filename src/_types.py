@@ -1,5 +1,7 @@
 from dataclasses import dataclass
 
+IMAGE_HEIGHT = 720 
+IMAGE_WIDTH = 960
 
 @dataclass(slots=True)
 class RGB:

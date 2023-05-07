@@ -6,7 +6,7 @@ import numpy as np
 from PIL import Image
 from tqdm import tqdm
 
-from _types import CLASS_COLOR_LABELS, RGB
+from _types import CLASS_COLOR_LABELS, CLASS_COUNT, RGB
 
 
 def locate_data(
@@ -134,3 +134,23 @@ def show_imageNlabel(
                 ax[i, j].imshow(y_train[image_idx[i]])
 
     plt.tight_layout()
+
+
+def extract_class_masks(image: np.ndarray) -> np.ndarray:
+    """Extract each class in the image as a mask from input.
+
+    Args:
+        image: shape -> (BATCH_SIZE, IMAGE_HEIGHT, IMAGE_WIDTH)
+
+    Returns:
+        np.ndarray of shape (CLASS_COUNT * BATCH_SIZE, IMAGE_HEIGHT, IMAGE_WIDTH)
+    """
+    all_class_masks = []
+    for _class in image:
+        class_mask = np.array(
+            [(_class == i).astype(np.int8) for i in range(CLASS_COUNT)]
+        )
+
+        all_class_masks.append(class_mask)
+
+    return np.concatenate(all_class_masks, axis=0)

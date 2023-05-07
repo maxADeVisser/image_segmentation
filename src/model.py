@@ -25,7 +25,9 @@ def createDeepLabv3(
         model: Returns the DeepLabv3 model with the ResNet101 backbone.
     """
     model = models.segmentation.deeplabv3_resnet101(pretrained=True, progress=True)
-    model.classifier = DeepLabHead(2048, outputchannels) # 2048 is the number of ResNet101 output channels
+    model.classifier = DeepLabHead(
+        2048, outputchannels
+    )  # 2048 is the number of ResNet101 output channels
     model.train()  # Set the model in training mode
 
     return model
@@ -79,7 +81,7 @@ def fit_deeplabv3(
                 model.eval()
 
             # Iterate over batches for current epoch:
-            for batch in tqdm(iter(dataloaders[phase])): 
+            for batch in tqdm(iter(dataloaders[phase])):
                 # get the raw and label images:
                 inputs = batch["image"].to(device)
                 masks = batch["mask"].to(device)
@@ -90,10 +92,12 @@ def fit_deeplabv3(
                 # track history if model is in train mode
                 with torch.set_grad_enabled(phase == "train"):
                     # forward pass:
-                    outputs = model(inputs)
-                    loss = criterion(outputs["out"], masks)  # calculate loss
+                    output = model(
+                        inputs
+                    )  # output['out] has shape (batch_size, n_classes, height, width)
+                    loss = criterion(output["out"], masks)  # calculate loss
                     y_pred = (
-                        torch.argmax(outputs["out"], dim=1).data.cpu().numpy().ravel()
+                        torch.argmax(output["out"], dim=1).data.cpu().numpy().ravel()
                     )
                     y_true = masks.data.cpu().numpy().ravel()
 
@@ -104,18 +108,19 @@ def fit_deeplabv3(
                             batchsummary[f"{phase}_{name}"].append(
                                 metric(y_true > 0, y_pred > classification_threshold)
                             )
+                        elif name == "mIoU":
+                            batchsummary[f"{phase}_{name}"].append(
+                                metric(output["out"], masks)
+                            )
                         else:
                             batchsummary[f"{phase}_{name}"].append(
                                 metric(y_true.astype("uint8"), y_pred)
                             )
 
-                    
-
                     # backwards pass:
                     if phase == "train":
                         loss.backward()  # compute gradients
                         optimizer.step()  # update parameters
-
 
             # Calculate epoch summary
             batchsummary["epoch"] = epoch

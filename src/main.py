@@ -1,3 +1,5 @@
+import os
+
 import torch
 from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score
 from torch.utils import data
@@ -5,7 +7,7 @@ from torch.utils import data
 from dataloader import get_dataloaders
 from evaluation import mIoU
 from model import createDeepLabv3, fit_deeplabv3
-import os
+
 os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "max_split_size_mb:1000"
 
 def main(
