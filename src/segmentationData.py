@@ -17,10 +17,8 @@ class SegmentationDataset(VisionDataset):
                  root: str,
                  image_folder: str,
                  mask_folder: str,
+                 augments: list,
                  transforms: Optional[Callable] = None,
-                 seed: int = None,
-                 fraction: float = None,
-                 subset: str = None,
                  image_color_mode: str = "rgb",
                  mask_color_mode: str = "rgb") -> None:
         """
@@ -46,6 +44,13 @@ class SegmentationDataset(VisionDataset):
         super().__init__(root, transforms)
         image_folder_path = Path(self.root) / image_folder
         mask_folder_path = Path(self.root) / mask_folder
+
+        augmented_image_folder_paths = [Path(self.root) / ("train_"+aug_path) for aug_path in augments]
+        augmented_mask_folder_paths = [Path(self.root) / ("train_labels_"+aug_path) for aug_path in augments]
+
+
+
+
         if not image_folder_path.exists():
             raise OSError(f"{image_folder_path} does not exist.")
         if not mask_folder_path.exists():
@@ -63,33 +68,16 @@ class SegmentationDataset(VisionDataset):
         self.image_color_mode = image_color_mode
         self.mask_color_mode = mask_color_mode
 
-        if not fraction:
-            self.image_names = sorted(image_folder_path.glob("*"))
-            self.mask_names = sorted(mask_folder_path.glob("*"))
-        else:
-            if subset not in ["Train", "Test"]:
-                raise (ValueError(
-                    f"{subset} is not a valid input. Acceptable values are Train and Test."
-                ))
-            self.fraction = fraction
-            self.image_list = np.array(sorted(image_folder_path.glob("*")))
-            self.mask_list = np.array(sorted(mask_folder_path.glob("*")))
-            if seed:
-                np.random.seed(seed)
-                indices = np.arange(len(self.image_list))
-                np.random.shuffle(indices)
-                self.image_list = self.image_list[indices]
-                self.mask_list = self.mask_list[indices]
-            if subset == "Train":
-                self.image_names = self.image_list[:int(
-                    np.ceil(len(self.image_list) * (1 - self.fraction)))]
-                self.mask_names = self.mask_list[:int(
-                    np.ceil(len(self.mask_list) * (1 - self.fraction)))]
-            else:
-                self.image_names = self.image_list[
-                    int(np.ceil(len(self.image_list) * (1 - self.fraction))):]
-                self.mask_names = self.mask_list[
-                    int(np.ceil(len(self.mask_list) * (1 - self.fraction))):]
+
+        self.image_names = sorted(image_folder_path.glob("*"))
+        self.mask_names = sorted(mask_folder_path.glob("*"))
+
+        for i in range(len(augments)):
+            self.image_names = self.image_names + sorted(augmented_image_folder_paths[i].glob("*"))
+            self.mask_names = self.mask_names + sorted(augmented_mask_folder_paths[i].glob("*"))
+
+
+
 
     def __len__(self) -> int:
         return len(self.image_names)

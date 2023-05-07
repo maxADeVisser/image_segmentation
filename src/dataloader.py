@@ -11,12 +11,7 @@ def get_dataloaders(
     image_folder: str = "",
     mask_folder: str = "_labels",
     batch_size: int = 2,
-    data_transforms: transforms.Compose = transforms.Compose(
-        [
-            transforms.ToTensor(),
-            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
-        ]
-    ),
+    augments: list=  list()
 ) -> dict[str, DataLoader]:
     """
     Args:
@@ -29,22 +24,40 @@ def get_dataloaders(
         Train and Test dataloaders.
     """
     # Define transforms (convert to tensor and normalize)
-    # data_transforms = transforms.Compose(
-    #     [
-    #         transforms.ToTensor(),
-    #         transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
-    #     ]
-    # )
+    data_transforms = transforms.Compose(
+        [
+            transforms.ToTensor(),
+            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+        ]
+    )
 
-    image_datasets = {
-        x: SegmentationDataset(
+    # image_datasets = {
+    #     x: SegmentationDataset(
+    #         root=Path(data_dir),
+    #         transforms=data_transforms,
+    #         image_folder=x + image_folder,
+    #         mask_folder=x + mask_folder,
+    #     )
+    #     for x in ["train", "val"]
+    # }
+
+    image_datasets = dict()
+
+    image_datasets["train"] = SegmentationDataset(
             root=Path(data_dir),
             transforms=data_transforms,
-            image_folder=x + image_folder,
-            mask_folder=x + mask_folder,
+            image_folder="train" + image_folder,
+            mask_folder="train" + mask_folder,
+            augments=augments
         )
-        for x in ["train", "val"]
-    }
+
+
+    image_datasets["val"] = SegmentationDataset(
+            root=Path(data_dir),
+            transforms=data_transforms,
+            image_folder="val" + image_folder,
+            mask_folder="val" + mask_folder,
+        )
 
     dataloaders = {
         x: DataLoader(

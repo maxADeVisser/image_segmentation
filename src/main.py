@@ -16,6 +16,8 @@ def main(
     epochs: int = 25,
     batch_size: int = 2,
     learn_rate: float = 0.001,
+    augments: list = list(),
+    output_name: str = "/deeplabv3_no_transforms_weights.pt"
 ) -> None:
     model = createDeepLabv3()  # instantiate model
     model.train()  # set model to train mode
@@ -29,7 +31,7 @@ def main(
         "mIoU": mIoU
     }
 
-    dataloaders = get_dataloaders(data_dir=data_dir, batch_size=batch_size)
+    dataloaders = get_dataloaders(data_dir=data_dir, batch_size=batch_size, augments=augments)
 
     # fit the model using the dataloaders
     fit_deeplabv3(
@@ -42,8 +44,23 @@ def main(
         num_epochs=epochs,
     )
 
-    torch.save(model, out_dir + "/weights.pt")
+    torch.save(model, out_dir + output_name)
 
 
 if __name__ == "__main__":
-    main()
+    flip = ["flip"]
+    crop = ["crop"]
+    perspective = ["perspective"]
+    jitter = ["jitter"]
+    all = [
+        "flip",
+        "crop",
+        "perspective",
+        "jitter"
+    ]
+
+    main(augments=flip, output_name="/deeplabv3_flip_weights.pt")
+    main(augments=crop, output_name="/deeplabv3_crop_weights.pt")
+    main(augments=perspective, output_name="/deeplabv3_perspective_weights.pt")
+    main(augments=jitter, output_name="/deeplabv3_jitter_weights.pt")
+    main(augments=all, output_name="/deeplabv3_all_weights.pt")
