@@ -158,7 +158,7 @@ class SemanticSegmentationDataset(data.Dataset):
         return index % self.X.shape[0]
 
     def adjust_mask(self,mask: np.array, class_labels: pd.DataFrame) -> torch.Tensor:
-        """Adjust mask to be in range 0-11"""
+        """Adjust mask to be in range 1-32"""
         label_dict = class_labels.iloc[:, 1:].to_dict(orient='index')
         label_dict ={ k: list(v.values()) for k, v in label_dict.items()}
         segmentation_map_list = []
