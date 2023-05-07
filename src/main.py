@@ -1,5 +1,5 @@
 import os
-
+import sys
 import torch
 from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score
 from torch.utils import data
@@ -58,9 +58,15 @@ if __name__ == "__main__":
         "perspective",
         "jitter"
     ]
-
-    main(augments=flip, output_name="/deeplabv3_flip_weights.pt")
-    main(augments=crop, output_name="/deeplabv3_crop_weights.pt")
-    main(augments=perspective, output_name="/deeplabv3_perspective_weights.pt")
-    main(augments=jitter, output_name="/deeplabv3_jitter_weights.pt")
-    main(augments=all, output_name="/deeplabv3_all_weights.pt")
+    augment = sys.argv[1]
+    match augment:
+        case "flip":
+            main(augments=flip, output_name="/deeplabv3_flip_weights.pt")
+        case "crop":
+            main(augments=crop, output_name="/deeplabv3_crop_weights.pt")
+        case "perspective":
+            main(augments=perspective, output_name="/deeplabv3_perspective_weights.pt")
+        case "jitter":
+            main(augments=jitter, output_name="/deeplabv3_jitter_weights.pt")
+        case "all":
+            main(augments=all, output_name="/deeplabv3_all_weights.pt")
