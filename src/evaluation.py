@@ -11,8 +11,8 @@ def mIoU(output: Tensor, sample: Tensor, batch_size: int = 2) -> float:
     """Calculates the mIoU score for a given output and sample."""
     jacc_scores = []
     for i in range(CLASS_COUNT):
-        out = extract_class_masks(output.argmax(1).numpy())[i]  # 2D
-        label = extract_class_masks(sample.unsqueeze(0).numpy()).reshape(
+        out = extract_class_masks(output.argmax(1).cpu().numpy())[i]  # 2D
+        label = extract_class_masks(sample.unsqueeze(0).cpu().numpy()).reshape(
             CLASS_COUNT * batch_size, IMAGE_HEIGHT, IMAGE_WIDTH
         )[i]
         

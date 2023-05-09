@@ -32,7 +32,7 @@ def createDeepLabv3(
 
     return model
 
-
+@profile
 def fit_deeplabv3(
     model: models.segmentation.DeepLabV3,
     dataloaders: dict[str, DataLoader],
@@ -67,7 +67,7 @@ def fit_deeplabv3(
 
     ### TRAINING LOOP ###
     for epoch in range(1, num_epochs + 1):
-        torch.cuda.empty_cache()
+
         print(f"Epoch {epoch}/{num_epochs}")
         print("-" * 10)
 
@@ -81,10 +81,12 @@ def fit_deeplabv3(
                 model.eval()
 
             # Iterate over batches for current epoch:
-            for batch in tqdm(iter(dataloaders[phase])):
+            dataloader_iter = iter(dataloaders[phase])
+            for inputs, masks in tqdm(dataloader_iter):
                 # get the raw and label images:
-                inputs = batch["image"].to(device)
-                masks = batch["mask"].to(device)
+                
+                inputs = inputs.to(device)
+                masks = masks.to(device)
 
                 # zero the gradient parameters
                 optimizer.zero_grad()
@@ -96,26 +98,26 @@ def fit_deeplabv3(
                         inputs
                     )  # output['out] has shape (batch_size, n_classes, height, width)
                     loss = criterion(output["out"], masks)  # calculate loss
-                    y_pred = (
-                        torch.argmax(output["out"], dim=1).data.cpu().numpy().ravel()
-                    )
-                    y_true = masks.data.cpu().numpy().ravel()
+                    # y_pred = (
+                    #     torch.argmax(output["out"], dim=1).data.cpu().numpy().ravel()
+                    # )
+                    # y_true = masks.data.cpu().numpy().ravel()
 
-                    # Calculate batch summary
-                    for name, metric in metrics.items():
-                        if name == "f1_score":
-                            classification_threshold = 0.1
-                            batchsummary[f"{phase}_{name}"].append(
-                                metric(y_true > 0, y_pred > classification_threshold)
-                            )
-                        elif name == "mIoU":
-                            batchsummary[f"{phase}_{name}"].append(
-                                metric(output["out"], masks)
-                            )
-                        else:
-                            batchsummary[f"{phase}_{name}"].append(
-                                metric(y_true.astype("uint8"), y_pred)
-                            )
+                    # # Calculate batch summary
+                    # for name, metric in metrics.items():
+                    #     if name == "f1_score":
+                    #         classification_threshold = 0.1
+                    #         batchsummary[f"{phase}_{name}"].append(
+                    #             metric(y_true > 0, y_pred > classification_threshold)
+                    #         )
+                    #     # elif name == "mIoU":
+                    #     #     batchsummary[f"{phase}_{name}"].append(
+                    #     #         metric(output["out"], masks)
+                    #     #     )
+                    #     else:
+                    #         batchsummary[f"{phase}_{name}"].append(
+                    #             metric(y_true.astype("uint8"), y_pred)
+                    #         )
 
                     # backwards pass:
                     if phase == "train":

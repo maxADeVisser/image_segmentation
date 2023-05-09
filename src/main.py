@@ -14,7 +14,7 @@ def main(
     data_dir: str = "data/CamVid/",
     out_dir: str = "out",
     epochs: int = 25,
-    batch_size: int = 2,
+    batch_size: int = 3,
     learn_rate: float = 0.001,
     augments: list = list(),
     output_name: str = "/deeplabv3_no_transforms_weights.pt"
@@ -28,10 +28,14 @@ def main(
     metrics = {
         "accuracy_score": accuracy_score,
         "f1_score": f1_score,
-        "mIoU": mIoU
+#        "mIoU": mIoU
     }
 
-    dataloaders = get_dataloaders(data_dir=data_dir, batch_size=batch_size, augments=augments)
+    dataloaders = get_dataloaders(
+        data_dir=data_dir, 
+        batch_size=batch_size, 
+        augments=augments
+        )
 
     # fit the model using the dataloaders
     fit_deeplabv3(
@@ -58,15 +62,16 @@ if __name__ == "__main__":
         "perspective",
         "jitter"
     ]
-    augment = sys.argv[1]
-    match augment:
-        case "flip":
-            main(augments=flip, output_name="/deeplabv3_flip_weights.pt")
-        case "crop":
-            main(augments=crop, output_name="/deeplabv3_crop_weights.pt")
-        case "perspective":
-            main(augments=perspective, output_name="/deeplabv3_perspective_weights.pt")
-        case "jitter":
-            main(augments=jitter, output_name="/deeplabv3_jitter_weights.pt")
-        case "all":
-            main(augments=all, output_name="/deeplabv3_all_weights.pt")
+    main(augments=all, output_name="/deeplabv3_all_weights.pt")
+    # augment = sys.argv[1]
+    # match augment:
+    #     case "flip":
+    #         main(augments=flip, output_name="/deeplabv3_flip_weights.pt")
+    #     # case "crop":
+    #     #     main(augments=crop, output_name="/deeplabv3_crop_weights.pt")
+    #     # case "perspective":
+    #     #     main(augments=perspective, output_name="/deeplabv3_perspective_weights.pt")
+    #     case "jitter":
+    #         main(augments=jitter, output_name="/deeplabv3_jitter_weights.pt")
+    #     case "all":
+    #         main(augments=all, output_name="/deeplabv3_all_weights.pt")

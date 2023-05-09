@@ -17,7 +17,7 @@ class SegmentationDataset(VisionDataset):
                  root: str,
                  image_folder: str,
                  mask_folder: str,
-                 augments: list,
+                 augments: list = list(),
                  transforms: Optional[Callable] = None,
                  image_color_mode: str = "rgb",
                  mask_color_mode: str = "rgb") -> None:
