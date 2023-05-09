@@ -12,6 +12,7 @@ deeplabv3_no_transforms_weights.pt
 
 # C extensions
 *.so
+*.pt
 
 # Distribution / packaging
 .Python
