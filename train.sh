@@ -1,3 +1,4 @@
+python3 src/main.py none
 python3 src/main.py flip
 python3 src/main.py crop
 python3 src/main.py perspective

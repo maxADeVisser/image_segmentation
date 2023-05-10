@@ -62,16 +62,18 @@ if __name__ == "__main__":
         "perspective",
         "jitter"
     ]
-    main(augments=all, output_name="/deeplabv3_all_weights.pt")
-    # augment = sys.argv[1]
-    # match augment:
-    #     case "flip":
-    #         main(augments=flip, output_name="/deeplabv3_flip_weights.pt")
-    #     # case "crop":
-    #     #     main(augments=crop, output_name="/deeplabv3_crop_weights.pt")
-    #     # case "perspective":
-    #     #     main(augments=perspective, output_name="/deeplabv3_perspective_weights.pt")
-    #     case "jitter":
-    #         main(augments=jitter, output_name="/deeplabv3_jitter_weights.pt")
-    #     case "all":
-    #         main(augments=all, output_name="/deeplabv3_all_weights.pt")
+    
+    augment = sys.argv[1]
+    match augment:
+        case "none":
+            main(augments=list(), output_name="/deeplabv3_no_transforms_weights.pt")
+        case "flip":
+            main(augments=flip, output_name="/deeplabv3_flip_weights.pt")
+        case "crop":
+            main(augments=crop, output_name="/deeplabv3_crop_weights.pt")
+        case "perspective":
+            main(augments=perspective, output_name="/deeplabv3_perspective_weights.pt")
+        case "jitter":
+            main(augments=jitter, output_name="/deeplabv3_jitter_weights.pt")
+        case "all":
+            main(augments=all, output_name="/deeplabv3_all_weights.pt")

@@ -10,7 +10,6 @@ install poetry with `curl -sSL https://install.python-poetry.org | python3 -`
 
 - You can always bypass pre-commit hooks with the --no-verify flag to the git commit command
 
-
 ## Handy dandy tools
 - When working with images, this extension is nice when debugging to visually inspect images: https://marketplace.visualstudio.com/items?itemName=076923.python-image-preview
 

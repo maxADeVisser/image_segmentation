@@ -3,13 +3,13 @@ from pathlib import Path
 from torch.utils.data import DataLoader
 from torchvision import transforms
 
-from segmentationPreLoadData import SegmentationDataset
+from segmentationData import SegmentationDataset
 
 
 def get_dataloaders(
     data_dir: str = "data/CamVid",
-    image_folder: str = ".npy",
-    mask_folder: str = "_labels.npy",
+    image_folder: str = "",
+    mask_folder: str = "_labels",
     batch_size: int = 2,
     augments: list=  list()
 ) -> dict[str, DataLoader]:
@@ -46,8 +46,8 @@ def get_dataloaders(
     image_datasets["train"] = SegmentationDataset(
             root=Path(data_dir),
             transforms=data_transforms,
-            image_folder="train_all.npy",
-            mask_folder="train_labels_all.npy",
+            image_folder="train" + image_folder,
+            mask_folder="train_labels" + mask_folder,
             augments=augments
         )
 
