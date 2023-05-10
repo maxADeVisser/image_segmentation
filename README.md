@@ -49,6 +49,10 @@ Available augmentations are:
 
 If you want to train all of the models you can use the shell script "train.sh"
 
+![augmentations](images/augmentations.png)
+
+
+
 ## Results
 the trained models can be found via https://drive.google.com/drive/folders/1bBaAwH5eV-CTXY4Fm4XoMjWbdj9K7VkM?usp=sharing
 
@@ -79,4 +83,10 @@ We are using the mean Intersection over Union (IoU) metric to evaluate the segme
 
 ## Files
 - `out/y_train_class_count.csv` has information of the count of pixels for each class
-- `src/dataloader.py` specifies how data is loaded from 
+- `src/main.py` main files to perform training
+- `src/model` specifies model instanciation and training
+- `src/dataloader.py` specifies how data is loaded from the dataset classes
+- `src/segmentationData` is the dataset class form pytorch to load the data
+- `src/segmentationPreLoadData` is a different dataset class which can load npy files (used to load all images into memory at once instead of loading from disk everytime you use an image)
+- `src/evaluation.py` has all of our evaluation metric code
+- `src/Transformations.ipynb` Specifies how to generate all of the augmentated images as well as how to preload the data into saved numpy arrays(this is very messy, do not recommend using this)
