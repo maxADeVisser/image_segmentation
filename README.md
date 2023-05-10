@@ -11,6 +11,10 @@
 
 ## Data
 
+- Classify each pixel in the image according to our 32 classes
+
+See data characteristics in image below
+
 ![data descriptoion](images/datadescription.png)
 
 
